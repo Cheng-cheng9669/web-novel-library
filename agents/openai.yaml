@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Novel Library"
+  short_description: "Maintain and translate serialized web novels"
+  default_prompt: "Use $web-novel-library to import, synchronize, translate, or audit a serialized web novel library."
