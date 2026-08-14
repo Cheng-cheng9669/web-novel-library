@@ -2,7 +2,7 @@
 
 **简体中文** | [English](README_EN.md)
 
-一个面向 Codex/Agent 的连载网络小说资料库 Skill，用于安全导入源文章节、维护可恢复的增量翻译状态，并发现缺章、源文变更和译文过期等问题。
+一个同时支持 Codex 与 Claude Code 的连载网络小说资料库 Agent Skill，用于安全导入源文章节、维护可恢复的增量翻译状态，并发现缺章、源文变更和译文过期等问题。
 
 > 当前版本重点解决“源文本进入翻译流水线之后是否可靠”，不内置绕过登录、付费墙、DRM、年龄限制、地区限制或平台访问规则的抓取器。远端内容应通过合规的平台适配器、官方导出或用户有权处理的本地文件提供。
 
@@ -62,7 +62,9 @@ validate ──► 缺失、过期、修改或异常报告
 
 ## 安装
 
-将仓库克隆到 Codex 的 Skill 目录：
+### Codex
+
+将仓库克隆到个人 Skill 目录：
 
 ```powershell
 git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:USERPROFILE\.codex\skills\web-novel-library"
@@ -74,7 +76,55 @@ git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:USERPRO
 git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:CODEX_HOME\skills\web-novel-library"
 ```
 
-刷新或重新启动 Codex 后，可以这样调用：
+刷新或重新启动 Codex 后，使用 `$web-novel-library` 调用。
+
+### Claude Code：个人安装
+
+Claude Code 用户可以把同一个仓库克隆到个人 Skill 目录，无需修改核心文件。
+
+Windows PowerShell：
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills"
+git clone https://github.com/Cheng-cheng9669/web-novel-library.git `
+  "$env:USERPROFILE\.claude\skills\web-novel-library"
+```
+
+macOS / Linux：
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/Cheng-cheng9669/web-novel-library.git \
+  ~/.claude/skills/web-novel-library
+```
+
+如果 Claude Code 启动时 `~/.claude/skills` 尚不存在，安装后重新启动一次。之后可以直接调用：
+
+```text
+/web-novel-library 为这些编号章节建立可恢复的增量翻译资料库
+```
+
+也可以使用自然语言描述任务，让 Claude 根据 `SKILL.md` 的描述自动加载。
+
+### Claude Code：项目级安装
+
+若只希望某个项目及其协作者使用，可以从项目根目录添加 Git submodule：
+
+```bash
+git submodule add \
+  https://github.com/Cheng-cheng9669/web-novel-library.git \
+  .claude/skills/web-novel-library
+```
+
+协作者克隆项目后运行：
+
+```bash
+git submodule update --init --recursive
+```
+
+项目级安装提供可复现的 Skill 版本，不影响其他 Claude Code 项目。
+
+### 调用示例
 
 ```text
 使用 $web-novel-library 为这些编号章节建立可恢复的增量翻译资料库。
@@ -83,6 +133,8 @@ git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:CODEX_H
 ```text
 使用 $web-novel-library 检查书库中缺失、过期和未经登记的译文章节。
 ```
+
+在 Claude Code 中，也可以把前缀改为 `/web-novel-library`。Codex 专用的 `agents/openai.yaml` 会被 Claude Code 忽略，不影响 `SKILL.md`、脚本或参考资料的使用。
 
 ## 快速开始
 

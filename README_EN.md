@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | **English**
 
-An agent skill for maintaining serialized web-novel libraries: safely ingest source chapters, run resumable incremental translations, and detect missing chapters, changed sources, and stale translations.
+A cross-platform Agent Skill for Codex and Claude Code that maintains serialized web-novel libraries: safely ingest source chapters, run resumable incremental translations, and detect missing chapters, changed sources, and stale translations.
 
 > This release focuses on the integrity of source text after it enters the translation workflow. It does not include scrapers that bypass authentication, paywalls, DRM, age gates, regional restrictions, or platform access rules. Remote content should come from a compliant adapter, an official export, or local files the user is authorized to process.
 
@@ -62,7 +62,9 @@ Source acquisition, model judgment, deterministic state changes, and Git publica
 
 ## Installation
 
-Clone the repository into the Codex skills directory:
+### Codex
+
+Clone the repository into your personal skills directory:
 
 ```powershell
 git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:USERPROFILE\.codex\skills\web-novel-library"
@@ -74,7 +76,55 @@ If `CODEX_HOME` is configured:
 git clone https://github.com/Cheng-cheng9669/web-novel-library.git "$env:CODEX_HOME\skills\web-novel-library"
 ```
 
-Restart or refresh Codex, then invoke the skill with a request such as:
+Restart or refresh Codex, then invoke the skill with `$web-novel-library`.
+
+### Claude Code: personal installation
+
+Claude Code users can clone the same repository into their personal skills directory without changing the core files.
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills"
+git clone https://github.com/Cheng-cheng9669/web-novel-library.git `
+  "$env:USERPROFILE\.claude\skills\web-novel-library"
+```
+
+macOS or Linux:
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/Cheng-cheng9669/web-novel-library.git \
+  ~/.claude/skills/web-novel-library
+```
+
+If `~/.claude/skills` did not exist when Claude Code started, restart Claude Code once after installation. Then invoke the skill directly:
+
+```text
+/web-novel-library create a resumable incremental translation library for these numbered chapters
+```
+
+You can also describe the task naturally and let Claude load the skill from its `SKILL.md` description.
+
+### Claude Code: project installation
+
+To make the skill available only to one project and its collaborators, add it as a Git submodule from the project root:
+
+```bash
+git submodule add \
+  https://github.com/Cheng-cheng9669/web-novel-library.git \
+  .claude/skills/web-novel-library
+```
+
+After cloning the project, collaborators run:
+
+```bash
+git submodule update --init --recursive
+```
+
+Project installation pins a reproducible skill version without affecting other Claude Code projects.
+
+### Invocation examples
 
 ```text
 Use $web-novel-library to create a resumable incremental translation library for these numbered chapters.
@@ -83,6 +133,8 @@ Use $web-novel-library to create a resumable incremental translation library for
 ```text
 Use $web-novel-library to find missing, stale, or untracked translations in this novel library.
 ```
+
+In Claude Code, replace the prefix with `/web-novel-library`. Claude Code ignores the Codex-specific `agents/openai.yaml`; this does not affect `SKILL.md`, bundled scripts, or references.
 
 ## Quick start
 
